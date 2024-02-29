@@ -14,11 +14,22 @@ const int BTN_PIN_RED = 13;
 const int BTN_PIN_GREEN = 12;
 const int BTN_PIN_BLUE = 10;
 const int BTN_PIN_YELLOW = 11;
+const int LED_PIN_RED = 8;
+const int LED_PIN_GREEN = 6;
+const int LED_PIN_BLUE = 7;
+const int LED_PIN_YELLOW = 9;
+
 const int BUZZ_PIN = 18;
 volatile int foi_red = 0;
 volatile int foi_green = 0;
 volatile int foi_blue = 0;
 volatile int foi_yellow = 0;
+
+volatile int led_red = 0;
+volatile int led_green = 0;
+volatile int led_blue = 0;
+volatile int led_yellow = 0;
+
 volatile int freq_green = 1000;
 volatile int freq_red = 6000;
 volatile int freq_blue = 4000;
@@ -39,7 +50,7 @@ void btn_callback(uint gpio, uint32_t events) {
   }
 }
 
-void reproduz(double tempo, int freq, int pino){
+void reproduz(double tempo, int freq, int pino, int led_pino){
   float periodo = (1.0/freq) * (float) pow(10,6);
   float s = (periodo / (float)2) ;
   int giro = (tempo*1000)/(periodo);
@@ -49,10 +60,14 @@ void reproduz(double tempo, int freq, int pino){
     sleep_us((int)s);
     gpio_put(pino, 0);
     sleep_us((int)s);
+
+    gpio_put(led_pino, 1);
     i++;
   }
+    gpio_put(led_pino, 0);
 
 }
+
 
 int main(){
   stdio_init_all();
@@ -72,6 +87,19 @@ int main(){
   gpio_init(BTN_PIN_YELLOW);
   gpio_set_dir(BTN_PIN_YELLOW, GPIO_IN);
   gpio_pull_up(BTN_PIN_YELLOW);
+
+
+  gpio_init(LED_PIN_RED);
+  gpio_set_dir(LED_PIN_RED, GPIO_OUT);
+
+  gpio_init(LED_PIN_GREEN);
+  gpio_set_dir(LED_PIN_GREEN, GPIO_OUT);
+
+  gpio_init(LED_PIN_BLUE);
+  gpio_set_dir(LED_PIN_BLUE, GPIO_OUT);
+
+  gpio_init(LED_PIN_YELLOW);
+  gpio_set_dir(LED_PIN_YELLOW, GPIO_OUT);
 
   gpio_init(BUZZ_PIN);
   gpio_set_dir(BUZZ_PIN, GPIO_OUT);
@@ -93,19 +121,21 @@ int main(){
   while (true) {
     if (foi_green == 1) {
       printf("green");
-      reproduz(300,freq_green,18);
+      reproduz(300,freq_green,18, LED_PIN_GREEN);
       foi_green = 0;
+
     } else if (foi_red == 1) {
       printf("red");
-      reproduz(300,freq_red,18);
+      reproduz(300,freq_red,18, LED_PIN_RED);
       foi_red = 0;
+
     } else if (foi_blue == 1) {
       printf("blue");
-      reproduz(300,freq_blue,18);
+      reproduz(300,freq_blue,18, LED_PIN_BLUE);
       foi_blue = 0;
     } else if (foi_yellow == 1) {
       printf("yellow");
-      reproduz(300,freq_yellow,18);
+      reproduz(300,freq_yellow,18, LED_PIN_YELLOW);
       foi_yellow = 0;
     }
 
