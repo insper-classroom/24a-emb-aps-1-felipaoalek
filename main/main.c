@@ -34,6 +34,78 @@ volatile int freq_green = 1000;
 volatile int freq_red = 6000;
 volatile int freq_blue = 4000;
 volatile int freq_yellow = 2000;
+volatile int ledSelecionado = 0;
+volatile int jogo = 1;
+volatile int escolheu = 1;
+
+void reproduz(double tempo, int freq, int pino, int led_pino){
+  float periodo = (1.0/freq) * (float) pow(10,6);
+  float s = (periodo / (float)2) ;
+  int giro = (tempo*1000)/(periodo);
+  int i = 0;
+  while(i<=giro){
+    gpio_put(pino, 1);
+    sleep_us((int)s);
+    gpio_put(pino, 0);
+    sleep_us((int)s);
+
+    gpio_put(led_pino, 1);
+    i++;
+  }
+    sleep_ms(100);
+    gpio_put(led_pino, 0);
+
+}
+
+void erro(double tempo, int freq, int pino){
+  float periodo = (1.0/freq) * (float) pow(10,6);
+  float s = (periodo / (float)2) ;
+  int giro = (tempo*1000)/(periodo);
+  int i = 0;
+  while(i<=giro){
+    gpio_put(pino, 1);
+    sleep_us((int)s);
+    gpio_put(pino, 0);
+    sleep_us((int)s);
+
+    gpio_put(LED_PIN_RED ,1);
+    gpio_put(LED_PIN_GREEN ,1);
+    gpio_put(LED_PIN_BLUE, 1);
+    gpio_put(LED_PIN_YELLOW ,1);
+
+    i++;
+  }
+    sleep_ms(100);
+    gpio_put(LED_PIN_RED ,0);
+    gpio_put(LED_PIN_GREEN ,0);
+    gpio_put(LED_PIN_BLUE ,0);
+    gpio_put(LED_PIN_YELLOW ,0);
+
+}
+
+
+void acendeLEDaleatorio() {
+    int ledAleatorio = rand() % 4; // Gera um número entre 0 e 3
+    switch (ledAleatorio) {
+        case 0:
+            reproduz(700, freq_green, BUZZ_PIN, LED_PIN_GREEN);
+            
+            ledSelecionado = BTN_PIN_GREEN;
+            break;
+        case 1:
+            reproduz(700, freq_red, BUZZ_PIN, LED_PIN_RED);
+            ledSelecionado = BTN_PIN_RED;
+            break;
+        case 2:
+            reproduz(700, freq_blue, BUZZ_PIN, LED_PIN_BLUE);
+            ledSelecionado = BTN_PIN_BLUE;
+            break;
+        case 3:
+            reproduz(700, freq_yellow, BUZZ_PIN, LED_PIN_YELLOW);
+            ledSelecionado = BTN_PIN_YELLOW;
+            break;
+    }
+}
 
 void btn_callback(uint gpio, uint32_t events) {
    
@@ -50,23 +122,7 @@ void btn_callback(uint gpio, uint32_t events) {
   }
 }
 
-void reproduz(double tempo, int freq, int pino, int led_pino){
-  float periodo = (1.0/freq) * (float) pow(10,6);
-  float s = (periodo / (float)2) ;
-  int giro = (tempo*1000)/(periodo);
-  int i = 0;
-  while(i<=giro){
-    gpio_put(pino, 1);
-    sleep_us((int)s);
-    gpio_put(pino, 0);
-    sleep_us((int)s);
 
-    gpio_put(led_pino, 1);
-    i++;
-  }
-    gpio_put(led_pino, 0);
-
-}
 
 
 int main(){
@@ -118,25 +174,58 @@ int main(){
                                       &btn_callback);
 
   // callback led g (nao usar _with_callback)
-  while (true) {
+
+  
+  while (jogo ==1) {
+    if (escolheu == 1){
+    acendeLEDaleatorio();
+    }
+    escolheu = 0;
+
     if (foi_green == 1) {
+        escolheu = 1;
+      if(ledSelecionado != BTN_PIN_GREEN){
+            erro(600, 180, BUZZ_PIN);
+            jogo = 0;
+        }
+        else{
+    
       printf("green");
       reproduz(300,freq_green,18, LED_PIN_GREEN);
       foi_green = 0;
-
+        }
     } else if (foi_red == 1) {
+        escolheu = 1;
+        if(ledSelecionado != BTN_PIN_RED){
+            erro(600, 180, BUZZ_PIN);
+            jogo = 0;
+        }
+        else{
       printf("red");
       reproduz(300,freq_red,18, LED_PIN_RED);
       foi_red = 0;
+        }
 
     } else if (foi_blue == 1) {
+        escolheu = 1;
+        if(ledSelecionado != BTN_PIN_BLUE){
+            erro(600, 180, BUZZ_PIN);
+            jogo = 0;
+        } else{
       printf("blue");
       reproduz(300,freq_blue,18, LED_PIN_BLUE);
       foi_blue = 0;
+        }
     } else if (foi_yellow == 1) {
+        escolheu = 1;
+        if(ledSelecionado != BTN_PIN_YELLOW){
+            erro(600, 180, BUZZ_PIN);
+            jogo = 0;
+        } else{
       printf("yellow");
       reproduz(300,freq_yellow,18, LED_PIN_YELLOW);
       foi_yellow = 0;
+        }
     }
 
   }
