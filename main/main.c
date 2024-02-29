@@ -10,12 +10,12 @@
 #include <stdio.h>
 #include <math.h>
 
-const int BTN_PIN_RED = 13;
-const int BTN_PIN_GREEN = 12;
+const int BTN_PIN_RED = 12;
+const int BTN_PIN_GREEN = 13;
 const int BTN_PIN_BLUE = 10;
 const int BTN_PIN_YELLOW = 11;
-const int LED_PIN_RED = 8;
-const int LED_PIN_GREEN = 6;
+const int LED_PIN_RED = 6;
+const int LED_PIN_GREEN = 8;
 const int LED_PIN_BLUE = 7;
 const int LED_PIN_YELLOW = 9;
 
@@ -37,6 +37,13 @@ volatile int freq_yellow = 2000;
 volatile int ledSelecionado = 0;
 volatile int jogo = 1;
 volatile int escolheu = 1;
+
+volatile int possiveis[4] = {0, 1, 2, 3};
+volatile int escolhido[100];
+volatile int selecionados[100];
+volatile int conta_selecionados = 0;
+volatile int conta_escolhidos = 0;
+volatile int i = 0;
 
 void reproduz(double tempo, int freq, int pino, int led_pino){
   float periodo = (1.0/freq) * (float) pow(10,6);
@@ -80,30 +87,52 @@ void erro(double tempo, int freq, int pino){
     gpio_put(LED_PIN_GREEN ,0);
     gpio_put(LED_PIN_BLUE ,0);
     gpio_put(LED_PIN_YELLOW ,0);
-
+    jogo = 0;
 }
 
+void valida(){
+    for (int j = 0; j < 100; j++) {
+        if (selecionados[j] != 5){
+            conta_selecionados++;
+        }
+    }
+    for (int j = 0; j < 100; j++){
+        if(escolhido[j] != 5){
+            conta_escolhidos++;
+        }
+    }
 
-void acendeLEDaleatorio() {
+    if (conta_selecionados == conta_escolhidos){
+        escolheu = 1;
+    }
+    
+    for (int j = 0; j < 100; j++) {
+        if ((escolhido[j] != selecionados[j])&&(selecionados[j] != 5)){
+            printf("%d", escolhido[j]);
+            printf("%d", selecionados[j]);
+            erro(600, 180, BUZZ_PIN);
+
+        }
+    }
+}
+
+void escolheLEDaleatorio(int i) {
     int ledAleatorio = rand() % 4; // Gera um número entre 0 e 3
-    switch (ledAleatorio) {
-        case 0:
+    escolhido[i] = ledAleatorio;
+    ledSelecionado = ledAleatorio;
+}
+
+void reproduzLedsAleatorios(){
+    for (int i = 0; i < 100; i++) {
+        if (escolhido[i] == 0){
             reproduz(700, freq_green, BUZZ_PIN, LED_PIN_GREEN);
-            
-            ledSelecionado = BTN_PIN_GREEN;
-            break;
-        case 1:
+        } else if (escolhido[i] == 1){
             reproduz(700, freq_red, BUZZ_PIN, LED_PIN_RED);
-            ledSelecionado = BTN_PIN_RED;
-            break;
-        case 2:
+        }else if (escolhido[i] == 2){
             reproduz(700, freq_blue, BUZZ_PIN, LED_PIN_BLUE);
-            ledSelecionado = BTN_PIN_BLUE;
-            break;
-        case 3:
+        }else if (escolhido[i] == 3){
             reproduz(700, freq_yellow, BUZZ_PIN, LED_PIN_YELLOW);
-            ledSelecionado = BTN_PIN_YELLOW;
-            break;
+        }
     }
 }
 
@@ -123,10 +152,13 @@ void btn_callback(uint gpio, uint32_t events) {
 }
 
 
-
-
 int main(){
   stdio_init_all();
+
+  for (int i = 0; i < 100; i++) {
+        escolhido[i] = 5;
+        selecionados[i] = 5;
+    }
 
   gpio_init(BTN_PIN_RED);
   gpio_set_dir(BTN_PIN_RED, GPIO_IN);
@@ -177,56 +209,59 @@ int main(){
 
   
   while (jogo ==1) {
-    if (escolheu == 1){
-    acendeLEDaleatorio();
+    for (int i = 0; i < 100; i++) {
+        if (conta_escolhidos == conta_selecionados){
+          selecionados[i] = 5;
+        }
     }
+
+    if (escolheu == 1){
+    escolheLEDaleatorio(i);
+    reproduzLedsAleatorios();
     escolheu = 0;
-
-    if (foi_green == 1) {
-        escolheu = 1;
-      if(ledSelecionado != BTN_PIN_GREEN){
-            erro(600, 180, BUZZ_PIN);
-            jogo = 0;
-        }
-        else{
+    }
     
+    if (foi_green == 1) {
+      escolheu = 1;
+      selecionados[i] = 0;
       printf("green");
+      printf("%d", selecionados[i]);
+      printf("%d", escolhido[i]);
       reproduz(300,freq_green,18, LED_PIN_GREEN);
+      sleep_ms(500);
       foi_green = 0;
-        }
-    } else if (foi_red == 1) {
-        escolheu = 1;
-        if(ledSelecionado != BTN_PIN_RED){
-            erro(600, 180, BUZZ_PIN);
-            jogo = 0;
-        }
-        else{
-      printf("red");
-      reproduz(300,freq_red,18, LED_PIN_RED);
-      foi_red = 0;
-        }
+      valida();
+      i++;
 
+    } else if (foi_red == 1) {
+      escolheu = 1;
+      selecionados[i] = 1;
+      printf("red");
+      printf("%d", selecionados[i]);
+      printf("%d", escolhido[i]);
+      reproduz(300,freq_red,18, LED_PIN_RED);
+      sleep_ms(500);
+      foi_red = 0;
+      valida();
+      i++;
     } else if (foi_blue == 1) {
-        escolheu = 1;
-        if(ledSelecionado != BTN_PIN_BLUE){
-            erro(600, 180, BUZZ_PIN);
-            jogo = 0;
-        } else{
+      escolheu = 1;
+      selecionados[i] = 2;
       printf("blue");
       reproduz(300,freq_blue,18, LED_PIN_BLUE);
+      sleep_ms(500);
       foi_blue = 0;
-        }
+      valida();
+      i++;
     } else if (foi_yellow == 1) {
-        escolheu = 1;
-        if(ledSelecionado != BTN_PIN_YELLOW){
-            erro(600, 180, BUZZ_PIN);
-            jogo = 0;
-        } else{
+      escolheu = 1;
+      selecionados[i] = 3;
       printf("yellow");
       reproduz(300,freq_yellow,18, LED_PIN_YELLOW);
+      sleep_ms(500);
       foi_yellow = 0;
-        }
-    }
-
+      valida();
+      i++;
+    } 
   }
 }
