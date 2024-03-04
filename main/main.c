@@ -64,6 +64,14 @@ void reproduz(double tempo, int freq, int pino, int led_pino){
 
 }
 
+int calcula_tamanho(volatile int v[]){
+  int i = 0;
+  while(v[i] != 5){
+    i++;
+  }
+  return i;
+}
+
 void erro(double tempo, int freq, int pino){
   float periodo = (1.0/freq) * (float) pow(10,6);
   float s = (periodo / (float)2) ;
@@ -108,8 +116,8 @@ void valida(){
     
     for (int j = 0; j < 100; j++) {
         if ((escolhido[j] != selecionados[j])&&(selecionados[j] != 5)){
-            printf("%d", escolhido[j]);
-            printf("%d", selecionados[j]);
+            printf("%d\n", escolhido[j]);
+            printf("%d\n", selecionados[j]);
             erro(600, 180, BUZZ_PIN);
 
         }
@@ -220,25 +228,45 @@ int main(){
     reproduzLedsAleatorios();
     escolheu = 0;
     }
+
+    // printando listra de escolhidos
+    printf("Escolhidos: ");
+    for (int i = 0; i < 100; i++) {
+        if (escolhido[i] != 5){
+            printf("%d ,", escolhido[i]);
+        }
+    }
+    printf("\n");
+
+    // printando listra de selecionados
+    printf("Selecionados: ");
+    for (int i = 0; i < 100; i++) {
+        if (selecionados[i] != 5){
+            printf("%d ,", selecionados[i]);
+        }
+    }
+
+    printf("\n");
+
+
+    while(calcula_tamanho(escolhido) > calcula_tamanho(selecionados)){
     
     if (foi_green == 1) {
       escolheu = 1;
-      selecionados[i] = 0;
-      printf("green");
-      printf("%d", selecionados[i]);
-      printf("%d", escolhido[i]);
+      printf("green\n");
+      printf("%d\n", selecionados[i]);
+      printf("%d\n", escolhido[i]);
       reproduz(300,freq_green,18, LED_PIN_GREEN);
       sleep_ms(500);
       foi_green = 0;
       valida();
       i++;
-
     } else if (foi_red == 1) {
       escolheu = 1;
       selecionados[i] = 1;
-      printf("red");
-      printf("%d", selecionados[i]);
-      printf("%d", escolhido[i]);
+      printf("red\n");
+      printf("%d\n", selecionados[i]);
+      printf("%d\n", escolhido[i]);
       reproduz(300,freq_red,18, LED_PIN_RED);
       sleep_ms(500);
       foi_red = 0;
@@ -246,8 +274,9 @@ int main(){
       i++;
     } else if (foi_blue == 1) {
       escolheu = 1;
-      selecionados[i] = 2;
-      printf("blue");
+      printf("blue\n");
+      printf("%d\n", selecionados[i]);
+      printf("%d\n", escolhido[i]);
       reproduz(300,freq_blue,18, LED_PIN_BLUE);
       sleep_ms(500);
       foi_blue = 0;
@@ -256,12 +285,16 @@ int main(){
     } else if (foi_yellow == 1) {
       escolheu = 1;
       selecionados[i] = 3;
-      printf("yellow");
+      printf("yellow\n");
+      printf("%d\n", selecionados[i]);
+      printf("%d\n", escolhido[i]);
       reproduz(300,freq_yellow,18, LED_PIN_YELLOW);
       sleep_ms(500);
       foi_yellow = 0;
       valida();
       i++;
     } 
+    
+    }
   }
 }
