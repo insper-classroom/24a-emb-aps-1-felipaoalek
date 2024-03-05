@@ -211,16 +211,6 @@ int main(){
     escolheu = 0;
     }
     rodada = 0;
-    // printando listra de escolhidos
-    //printf("Escolhidos: ");
-    //print_lista(escolhido);
-    
-    // printando listra de selecionados
-    //printf("Selecionados: ");
-    //print_lista(selecionados);
-
-    printf("\n");
-
 
     while(calcula_tamanho(escolhido) > calcula_tamanho(selecionados)){
     
