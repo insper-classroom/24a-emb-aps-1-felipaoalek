@@ -126,7 +126,8 @@ void valida(){
 }
 
 void escolheLEDaleatorio(int i) {
-    int ledAleatorio = rand() % 4; // Gera um número entre 0 e 3
+    srand(time(NULL));
+    int ledAleatorio = srand() % 4; // Gera um número entre 0 e 3
     escolhido[i] = ledAleatorio;
     ledSelecionado = ledAleatorio;
 }
@@ -263,8 +264,8 @@ int main(){
         foi_green = 0;
         if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
             erro(600, 180, BUZZ_PIN);
+            jogo = 0;
         }
-        i++;
         rodada++;
       } else if (foi_red == 1) {
         escolheu = 1;
@@ -281,8 +282,8 @@ int main(){
         foi_red = 0;
         if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
             erro(600, 180, BUZZ_PIN);
+            jogo = 0;
         }
-        i++;
         rodada++;
       } else if (foi_blue == 1) {
         escolheu = 1;
@@ -299,8 +300,8 @@ int main(){
         foi_blue = 0;
         if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
             erro(600, 180, BUZZ_PIN);
+            jogo = 0;
         }
-        i++;
         rodada++;
       } else if (foi_yellow == 1) {
         escolheu = 1;
@@ -317,8 +318,8 @@ int main(){
         foi_yellow = 0;
         if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
             erro(600, 180, BUZZ_PIN);
+            jogo = 0;
         }
-        i++;
         rodada++;
       } 
     }
