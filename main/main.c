@@ -42,9 +42,7 @@ volatile int rodada = 0;
 volatile int possiveis[4] = {0, 1, 2, 3};
 volatile int escolhido[100];
 volatile int selecionados[100];
-volatile int conta_selecionados = 0;
-volatile int conta_escolhidos = 0;
-volatile int i = 0;
+volatile 
 
 void reproduz(double tempo, int freq, int pino, int led_pino){
   float periodo = (1.0/freq) * (float) pow(10,6);
@@ -99,31 +97,6 @@ void erro(double tempo, int freq, int pino){
     jogo = 0;
 }
 
-void valida(){
-    for (int j = 0; j < 100; j++) {
-        if (selecionados[j] != 5){
-            conta_selecionados++;
-        }
-    }
-    for (int j = 0; j < 100; j++){
-        if(escolhido[j] != 5){
-            conta_escolhidos++;
-        }
-    }
-
-    if (conta_selecionados == conta_escolhidos){
-        escolheu = 1;
-    }
-    
-    for (int j = 0; j < 100; j++) {
-        if ((escolhido[j] != selecionados[j])&&(selecionados[j] != 5)){
-            printf("%d\n", escolhido[j]);
-            printf("%d\n", selecionados[j]);
-            erro(600, 180, BUZZ_PIN);
-
-        }
-    }
-}
 
 void escolheLEDaleatorio(int i) {
     srand(time(NULL));
@@ -227,7 +200,7 @@ int main(){
   
   while (jogo ==1) {
     for (int i = 0; i < 100; i++) {
-        if (conta_escolhidos == conta_selecionados){
+        if (calcula_tamanho(escolhido) == calcula_tamanho(selecionados)){
           selecionados[i] = 5;
         }
     }
