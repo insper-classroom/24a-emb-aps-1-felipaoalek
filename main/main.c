@@ -42,7 +42,7 @@ volatile int rodada = 0;
 volatile int possiveis[4] = {0, 1, 2, 3};
 volatile int escolhido[100];
 volatile int selecionados[100];
-volatile 
+volatile int recorde =0;
 
 void reproduz(double tempo, int freq, int pino, int led_pino){
   float periodo = (1.0/freq) * (float) pow(10,6);
@@ -294,6 +294,9 @@ int main(){
             jogo = 0;
         }
         rodada++;
+        if (rodada > recorde){
+          recorde = rodada;
+        }
       } 
     }
   }
