@@ -18,6 +18,9 @@ const int LED_PIN_RED = 6;
 const int LED_PIN_GREEN = 8;
 const int LED_PIN_BLUE = 7;
 const int LED_PIN_YELLOW = 9;
+const int BTN_PIN_START = 14;
+const int BTN_PIN_ONE_PLAYER = 15;
+const int BTN_PIN_TWO_PLAYERS = 16;
 
 const int BUZZ_PIN = 18;
 volatile int foi_red = 0;
@@ -138,6 +141,10 @@ void btn_callback(uint gpio, uint32_t events) {
     } else if (gpio == BTN_PIN_YELLOW){
       foi_yellow = 1;
     }
+    else_if (gpio == BTN_PIN_START){
+      jogo = 1;
+    }
+    
   }
 }
 
@@ -197,7 +204,23 @@ int main(){
 
   // callback led g (nao usar _with_callback)
 
-  
+  while(gpio_get(BTN_PIN_START) == 1){
+    printf("Aperte o botão para começar\n");
+  }
+  sleep_ms(100);
+  printf("Jogo iniciado\n");
+
+  while(gpio_get(BTN_PIN_ONE_PLAYER) == 1 && gpio_get(BTN_PIN_TWO_PLAYERS) == 1){
+    printf("Escolha o modo de jogo\n");
+  }
+
+  if(gpio_get(BTN_PIN_ONE_PLAYER) == 0){
+    printf("Modo de jogo: 1 jogador\n");
+  } else if(gpio_get(BTN_PIN_TWO_PLAYERS) == 0){
+    printf("Modo de jogo: 2 jogadores\n");
+  }
+  sleep_ms(500);
+
   while (jogo ==1) {
     for (int i = 0; i < 100; i++) {
         if (calcula_tamanho(escolhido) == calcula_tamanho(selecionados)){
