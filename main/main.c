@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-
 #include "hardware/gpio.h"
 #include "pico/stdlib.h"
 #include <stdio.h>
@@ -38,9 +37,11 @@ volatile int freq_red = 6000;
 volatile int freq_blue = 4000;
 volatile int freq_yellow = 2000;
 volatile int ledSelecionado = 0;
-volatile int jogo = 1;
+volatile int jogo = 0;
 volatile int escolheu = 1;
 volatile int rodada = 0;
+volatile int one = 0;
+volatile int two = 0;
 
 volatile int possiveis[4] = {0, 1, 2, 3};
 volatile int escolhido[100];
@@ -141,8 +142,14 @@ void btn_callback(uint gpio, uint32_t events) {
     } else if (gpio == BTN_PIN_YELLOW){
       foi_yellow = 1;
     }
-    else_if (gpio == BTN_PIN_START){
+      else if(gpio == BTN_PIN_START){
       jogo = 1;
+    }
+      else if(gpio == BTN_PIN_ONE_PLAYER){
+      one = 1;
+    }
+      else if(gpio == BTN_PIN_TWO_PLAYERS){
+      two = 1;
     }
     
   }
@@ -204,24 +211,24 @@ int main(){
 
   // callback led g (nao usar _with_callback)
 
-  while(gpio_get(BTN_PIN_START) == 1){
+  while(jogo == 0){
     printf("Aperte o botão para começar\n");
   }
   sleep_ms(100);
   printf("Jogo iniciado\n");
 
-  while(gpio_get(BTN_PIN_ONE_PLAYER) == 1 && gpio_get(BTN_PIN_TWO_PLAYERS) == 1){
+  while(one == 0 && two == 0){
     printf("Escolha o modo de jogo\n");
   }
 
-  if(gpio_get(BTN_PIN_ONE_PLAYER) == 0){
+  if(one == 0){
     printf("Modo de jogo: 1 jogador\n");
-  } else if(gpio_get(BTN_PIN_TWO_PLAYERS) == 0){
+  } else if(two == 0){
     printf("Modo de jogo: 2 jogadores\n");
   }
   sleep_ms(500);
 
-  while (jogo ==1) {
+  while (jogo ==1 && one == 1) {
     for (int i = 0; i < 100; i++) {
         if (calcula_tamanho(escolhido) == calcula_tamanho(selecionados)){
           selecionados[i] = 5;
@@ -313,4 +320,97 @@ int main(){
       } 
     }
   }
+  while(jogo == 1 && two == 1){
+    for (int i = 0; i < 100; i++) {
+        if (calcula_tamanho(escolhido) == calcula_tamanho(selecionados)){
+          selecionados[i] = 5;
+        }
+    }
+
+    if (escolheu == 1){
+    escolheLEDaleatorio(rodada);
+    reproduzLedsAleatorios();
+    escolheu = 0;
+    }
+    rodada = 0;
+
+    while(calcula_tamanho(escolhido) > calcula_tamanho(selecionados)){
+    
+      if (foi_green == 1) {
+        escolheu = 1;
+        selecionados[rodada] = 0;
+        printf("Selecionados: ");
+        print_lista(selecionados);
+        printf("green\n");
+        printf("%d\n", selecionados[rodada]);
+        printf("%d\n", escolhido[rodada]);
+        reproduz(300,freq_green,18, LED_PIN_GREEN);
+        sleep_ms(500);
+        foi_green = 0;
+        if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
+            erro(600, 180, BUZZ_PIN);
+            jogo = 0;
+        }
+        rodada++;
+      } else if (foi_red == 1) {
+        escolheu = 1;
+        selecionados[rodada] = 1;
+        printf("Selecionados: ");
+        print_lista(selecionados);
+        printf("Escolhidos: ");
+        print_lista(escolhido);
+        printf("red\n");
+        printf("%d\n", selecionados[rodada]);
+        printf("%d\n", escolhido[rodada]);
+        reproduz(300,freq_red,18, LED_PIN_RED);
+        sleep_ms(500);
+        foi_red = 0;
+        if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
+            erro(600, 180, BUZZ_PIN);
+            jogo = 0;
+        }
+        rodada++;
+      } else if (foi_blue == 1) {
+        escolheu = 1;
+        selecionados[rodada] = 2;
+        printf("Selecionados: ");
+        print_lista(selecionados);
+        printf("Escolhidos: ");
+        print_lista(escolhido);
+        printf("blue\n");
+        printf("%d\n", selecionados[rodada]);
+        printf("%d\n", escolhido[rodada]);
+        reproduz(300,freq_blue,18, LED_PIN_BLUE);
+        sleep_ms(500);
+        foi_blue = 0;
+        if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
+            erro(600, 180, BUZZ_PIN);
+            jogo = 0;
+        }
+        rodada++;
+      } else if (foi_yellow == 1) {
+        escolheu = 1;
+        selecionados[rodada] = 3;
+        printf("Selecionados: ");
+        print_lista(selecionados);
+        printf("Escolhidos: ");
+        print_lista(escolhido);
+        printf("yellow\n");
+        printf("%d\n", selecionados[rodada]);
+        printf("%d\n", escolhido[rodada]);
+        reproduz(300,freq_yellow,18, LED_PIN_YELLOW);
+        sleep_ms(500);
+        foi_yellow = 0;
+        if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
+            erro(600, 180, BUZZ_PIN);
+            jogo = 0;
+        }
+        rodada++;
+        if (rodada > recorde){
+          recorde = rodada;
+        }
+      }
+    }
+  }
 }
+
