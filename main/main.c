@@ -13,29 +13,56 @@ const int BTN_PIN_RED = 12;
 const int BTN_PIN_GREEN = 13;
 const int BTN_PIN_BLUE = 10;
 const int BTN_PIN_YELLOW = 11;
+
+const int BTN_PIN_RED_2 = 24;
+const int BTN_PIN_GREEN_2 = 25;
+const int BTN_PIN_BLUE_2 = 26;
+const int BTN_PIN_YELLOW_2 = 27;
+
+const int BTN_PIN_START = 14;
+
+const int BTN_PIN_ONE_PLAYER = 15;
+const int BTN_PIN_TWO_PLAYERS = 16;
+
 const int LED_PIN_RED = 6;
 const int LED_PIN_GREEN = 8;
 const int LED_PIN_BLUE = 7;
 const int LED_PIN_YELLOW = 9;
-const int BTN_PIN_START = 14;
-const int BTN_PIN_ONE_PLAYER = 15;
-const int BTN_PIN_TWO_PLAYERS = 16;
+
+const int LED_PIN_RED_2 = 20;
+const int LED_PIN_GREEN_2 = 21;
+const int LED_PIN_BLUE_2 = 22;
+const int LED_PIN_YELLOW_2 = 23;
 
 const int BUZZ_PIN = 18;
+
+volatile const int Ligado = 1;
+
 volatile int foi_red = 0;
 volatile int foi_green = 0;
 volatile int foi_blue = 0;
 volatile int foi_yellow = 0;
+
+volatile int foi_red_2 = 0;
+volatile int foi_green_2 = 0;
+volatile int foi_blue_2 = 0;
+volatile int foi_yellow_2 = 0;
 
 volatile int led_red = 0;
 volatile int led_green = 0;
 volatile int led_blue = 0;
 volatile int led_yellow = 0;
 
+volatile int led_red_2 = 0;
+volatile int led_green_2 = 0;
+volatile int led_blue_2 = 0;
+volatile int led_yellow_2 = 0;
+
 volatile int freq_green = 1000;
 volatile int freq_red = 6000;
 volatile int freq_blue = 4000;
 volatile int freq_yellow = 2000;
+
 volatile int ledSelecionado = 0;
 volatile int jogo = 0;
 volatile int escolheu = 1;
@@ -320,97 +347,9 @@ int main(){
       } 
     }
   }
+
   while(jogo == 1 && two == 1){
-    for (int i = 0; i < 100; i++) {
-        if (calcula_tamanho(escolhido) == calcula_tamanho(selecionados)){
-          selecionados[i] = 5;
-        }
-    }
-
-    if (escolheu == 1){
-    escolheLEDaleatorio(rodada);
-    reproduzLedsAleatorios();
-    escolheu = 0;
-    }
-    rodada = 0;
-
-    while(calcula_tamanho(escolhido) > calcula_tamanho(selecionados)){
-    
-      if (foi_green == 1) {
-        escolheu = 1;
-        selecionados[rodada] = 0;
-        printf("Selecionados: ");
-        print_lista(selecionados);
-        printf("green\n");
-        printf("%d\n", selecionados[rodada]);
-        printf("%d\n", escolhido[rodada]);
-        reproduz(300,freq_green,18, LED_PIN_GREEN);
-        sleep_ms(500);
-        foi_green = 0;
-        if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
-            erro(600, 180, BUZZ_PIN);
-            jogo = 0;
-        }
-        rodada++;
-      } else if (foi_red == 1) {
-        escolheu = 1;
-        selecionados[rodada] = 1;
-        printf("Selecionados: ");
-        print_lista(selecionados);
-        printf("Escolhidos: ");
-        print_lista(escolhido);
-        printf("red\n");
-        printf("%d\n", selecionados[rodada]);
-        printf("%d\n", escolhido[rodada]);
-        reproduz(300,freq_red,18, LED_PIN_RED);
-        sleep_ms(500);
-        foi_red = 0;
-        if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
-            erro(600, 180, BUZZ_PIN);
-            jogo = 0;
-        }
-        rodada++;
-      } else if (foi_blue == 1) {
-        escolheu = 1;
-        selecionados[rodada] = 2;
-        printf("Selecionados: ");
-        print_lista(selecionados);
-        printf("Escolhidos: ");
-        print_lista(escolhido);
-        printf("blue\n");
-        printf("%d\n", selecionados[rodada]);
-        printf("%d\n", escolhido[rodada]);
-        reproduz(300,freq_blue,18, LED_PIN_BLUE);
-        sleep_ms(500);
-        foi_blue = 0;
-        if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
-            erro(600, 180, BUZZ_PIN);
-            jogo = 0;
-        }
-        rodada++;
-      } else if (foi_yellow == 1) {
-        escolheu = 1;
-        selecionados[rodada] = 3;
-        printf("Selecionados: ");
-        print_lista(selecionados);
-        printf("Escolhidos: ");
-        print_lista(escolhido);
-        printf("yellow\n");
-        printf("%d\n", selecionados[rodada]);
-        printf("%d\n", escolhido[rodada]);
-        reproduz(300,freq_yellow,18, LED_PIN_YELLOW);
-        sleep_ms(500);
-        foi_yellow = 0;
-        if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
-            erro(600, 180, BUZZ_PIN);
-            jogo = 0;
-        }
-        rodada++;
-        if (rodada > recorde){
-          recorde = rodada;
-        }
-      }
-    }
+    // CÓDIGO 2 PLAYERS
   }
 }
 
