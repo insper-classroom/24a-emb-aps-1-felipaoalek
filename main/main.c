@@ -36,7 +36,7 @@ const int LED_PIN_YELLOW_2 = 23;
 
 const int BUZZ_PIN = 18;
 
-volatile const int Ligado = 1;
+volatile int Ligado = 1;
 
 volatile int foi_red = 0;
 volatile int foi_green = 0;
@@ -69,6 +69,7 @@ volatile int escolheu = 1;
 volatile int rodada = 0;
 volatile int one = 0;
 volatile int two = 0;
+volatile int l = 0;
 
 volatile int possiveis[4] = {0, 1, 2, 3};
 volatile int escolhido[100];
@@ -129,8 +130,8 @@ void erro(double tempo, int freq, int pino){
   int giro = (tempo*1000)/(periodo);
   int i = 0;
   musica_final();
-  while(i<=giro){
 
+  while(i<=giro){
 
     gpio_put(pino, 1);
     sleep_us((int)s);
@@ -337,9 +338,9 @@ int main(){
       recorde = 0;
     }
 
-
+  printf(("APERTE START PARA INICIAR O JOGO\n"));
   while(jogo == 0){
-    printf("Aperte o botão para começar\n");
+    l++;
   }
   musica_inicio();
   sleep_ms(100);
@@ -394,6 +395,7 @@ int main(){
         if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
             erro(600, 180, BUZZ_PIN);
             jogo = 0;
+            break;
         }
         rodada++;
       } else if (foi_red == 1) {
@@ -412,6 +414,7 @@ int main(){
         if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
             erro(600, 180, BUZZ_PIN);
             jogo = 0;
+            break;
         }
         rodada++;
       } else if (foi_blue == 1) {
@@ -448,6 +451,7 @@ int main(){
         if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
             erro(600, 180, BUZZ_PIN);
             jogo = 0;
+            break;
         }
         rodada++;
         if (rodada > recorde){
