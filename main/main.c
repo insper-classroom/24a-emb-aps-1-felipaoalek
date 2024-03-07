@@ -22,7 +22,7 @@ const int BTN_PIN_YELLOW_2 = 27;
 const int BTN_PIN_START = 14;
 
 const int BTN_PIN_ONE_PLAYER = 15;
-const int BTN_PIN_TWO_PLAYERS = 16;
+const int BTN_PIN_TWO_PLAYERS = 17;
 
 const int LED_PIN_RED = 6;
 const int LED_PIN_GREEN = 8;
@@ -37,6 +37,8 @@ const int LED_PIN_YELLOW_2 = 23;
 const int BUZZ_PIN = 18;
 
 volatile int Ligado = 1;
+
+volatile int jogador_atual = 1;
 
 volatile int foi_red = 0;
 volatile int foi_green = 0;
@@ -346,12 +348,12 @@ int main(){
   sleep_ms(100);
   printf("Jogo iniciado\n");
 
+  printf("Escolha o modo de jogo\n");
   while(one == 0 && two == 0){
-    printf("Escolha o modo de jogo\n");
+    l++;
   }
 
   while(jogo == 1){
-    printf("Escolha o modo de jogo\n");
     if(one == 1){
       printf("Modo de jogo: 1 jogador\n");
       break;
