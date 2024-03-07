@@ -180,6 +180,20 @@ void reproduzLedsAleatorios(){
     }
 }
 
+void reproduzLedsAleatorios2(){
+    for (int i = 0; i < 100; i++) {
+        if (escolhido[i] == 0){
+            reproduz(700, freq_green, BUZZ_PIN, LED_PIN_GREEN_2);
+        } else if (escolhido[i] == 1){
+            reproduz(700, freq_red, BUZZ_PIN, LED_PIN_RED_2);
+        }else if (escolhido[i] == 2){
+            reproduz(700, freq_blue, BUZZ_PIN, LED_PIN_BLUE_2);
+        }else if (escolhido[i] == 3){
+            reproduz(700, freq_yellow, BUZZ_PIN, LED_PIN_YELLOW_2);
+        }
+    }
+}
+
 void print_lista(volatile int v[]){
     for (int i = 0; i < 100; i++) {
         printf("%d ,", v[i]);    
@@ -197,6 +211,15 @@ void btn_callback(uint gpio, uint32_t events) {
     } else if (gpio == BTN_PIN_BLUE){
       foi_blue = 1;
     } else if (gpio == BTN_PIN_YELLOW){
+      foi_yellow = 1;
+    }
+    else if (gpio == BTN_PIN_RED_2) {
+      foi_red = 1;
+    } else if(gpio == BTN_PIN_GREEN_2){
+      foi_green = 1;
+    } else if (gpio == BTN_PIN_BLUE_2){
+      foi_blue = 1;
+    } else if (gpio == BTN_PIN_YELLOW_2){
       foi_yellow = 1;
     }
       else if(gpio == BTN_PIN_START){
@@ -464,7 +487,204 @@ int main(){
   }
 
   while(jogo == 1 && two == 1){
-    // CÓDIGO 2 PLAYERS
+
+    if(jogador_atual == 1){
+      printf("Jogador 1\n");
+         for (int i = 0; i < 100; i++) {
+        if (calcula_tamanho(escolhido) == calcula_tamanho(selecionados)){
+          selecionados[i] = 5;
+        }
+    }
+
+    if (escolheu == 1){
+    escolheLEDaleatorio(rodada);
+    reproduzLedsAleatorios();
+    escolheu = 0;
+    }
+    rodada = 0;
+
+    while(calcula_tamanho(escolhido) > calcula_tamanho(selecionados)){
+    
+      if (foi_green == 1) {
+          escolheu = 1;
+          selecionados[rodada] = 0;
+          printf("Selecionados: ");
+          print_lista(selecionados);
+          printf("green\n");
+          printf("%d\n", selecionados[rodada]);
+          printf("%d\n", escolhido[rodada]);
+          reproduz(300,freq_green,18, LED_PIN_GREEN);
+          sleep_ms(500);
+          foi_green = 0;
+          if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
+              erro(600, 180, BUZZ_PIN);
+              jogo = 0;
+              break;
+          }
+          rodada++;
+        } else if (foi_red == 1) {
+          escolheu = 1;
+          selecionados[rodada] = 1;
+          printf("Selecionados: ");
+          print_lista(selecionados);
+          printf("Escolhidos: ");
+          print_lista(escolhido);
+          printf("red\n");
+          printf("%d\n", selecionados[rodada]);
+          printf("%d\n", escolhido[rodada]);
+          reproduz(300,freq_red,18, LED_PIN_RED);
+          sleep_ms(500);
+          foi_red = 0;
+          if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
+              erro(600, 180, BUZZ_PIN);
+              jogo = 0;
+              break;
+          }
+          rodada++;
+        } else if (foi_blue == 1) {
+          escolheu = 1;
+          selecionados[rodada] = 2;
+          printf("Selecionados: ");
+          print_lista(selecionados);
+          printf("Escolhidos: ");
+          print_lista(escolhido);
+          printf("blue\n");
+          printf("%d\n", selecionados[rodada]);
+          printf("%d\n", escolhido[rodada]);
+          reproduz(300,freq_blue,18, LED_PIN_BLUE);
+          sleep_ms(500);
+          foi_blue = 0;
+          if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
+              erro(600, 180, BUZZ_PIN);
+              jogo = 0;
+          }
+          rodada++;
+        } else if (foi_yellow == 1) {
+          escolheu = 1;
+          selecionados[rodada] = 3;
+          printf("Selecionados: ");
+          print_lista(selecionados);
+          printf("Escolhidos: ");
+          print_lista(escolhido);
+          printf("yellow\n");
+          printf("%d\n", selecionados[rodada]);
+          printf("%d\n", escolhido[rodada]);
+          reproduz(300,freq_yellow,18, LED_PIN_YELLOW);
+          sleep_ms(500);
+          foi_yellow = 0;
+          if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
+              erro(600, 180, BUZZ_PIN);
+              jogo = 0;
+              break;
+          }
+          rodada++;
+          if (rodada > recorde){
+            recorde = rodada;
+          }
+        } 
+      }
+    } else {
+        printf("Jogador 2\n");
+          for (int i = 0; i < 100; i++) {
+          if (calcula_tamanho(escolhido) == calcula_tamanho(selecionados)){
+            selecionados[i] = 5;
+          }
+      }
+
+      if (escolheu == 1){
+      escolheLEDaleatorio(rodada);
+      reproduzLedsAleatorios2();
+      escolheu = 0;
+      }
+      rodada = 0;
+
+      while(calcula_tamanho(escolhido) > calcula_tamanho(selecionados)){
+      
+        if (foi_green == 1) {
+          escolheu = 1;
+          selecionados[rodada] = 0;
+          printf("Selecionados: ");
+          print_lista(selecionados);
+          printf("green\n");
+          printf("%d\n", selecionados[rodada]);
+          printf("%d\n", escolhido[rodada]);
+          reproduz(300,freq_green,18, LED_PIN_GREEN_2);
+          sleep_ms(500);
+          foi_green = 0;
+          if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
+              erro(600, 180, BUZZ_PIN);
+              jogo = 0;
+              break;
+          }
+          rodada++;
+        } else if (foi_red == 1) {
+          escolheu = 1;
+          selecionados[rodada] = 1;
+          printf("Selecionados: ");
+          print_lista(selecionados);
+          printf("Escolhidos: ");
+          print_lista(escolhido);
+          printf("red\n");
+          printf("%d\n", selecionados[rodada]);
+          printf("%d\n", escolhido[rodada]);
+          reproduz(300,freq_red,18, LED_PIN_RED_2);
+          sleep_ms(500);
+          foi_red = 0;
+          if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
+              erro(600, 180, BUZZ_PIN);
+              jogo = 0;
+              break;
+          }
+          rodada++;
+        } else if (foi_blue == 1) {
+          escolheu = 1;
+          selecionados[rodada] = 2;
+          printf("Selecionados: ");
+          print_lista(selecionados);
+          printf("Escolhidos: ");
+          print_lista(escolhido);
+          printf("blue\n");
+          printf("%d\n", selecionados[rodada]);
+          printf("%d\n", escolhido[rodada]);
+          reproduz(300,freq_blue,18, LED_PIN_BLUE_2);
+          sleep_ms(500);
+          foi_blue = 0;
+          if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
+              erro(600, 180, BUZZ_PIN);
+              jogo = 0;
+          }
+          rodada++;
+        } else if (foi_yellow == 1) {
+          escolheu = 1;
+          selecionados[rodada] = 3;
+          printf("Selecionados: ");
+          print_lista(selecionados);
+          printf("Escolhidos: ");
+          print_lista(escolhido);
+          printf("yellow\n");
+          printf("%d\n", selecionados[rodada]);
+          printf("%d\n", escolhido[rodada]);
+          reproduz(300,freq_yellow,18, LED_PIN_YELLOW_2);
+          sleep_ms(500);
+          foi_yellow = 0;
+          if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
+              erro(600, 180, BUZZ_PIN);
+              jogo = 0;
+              break;
+          }
+          rodada++;
+          if (rodada > recorde){
+            recorde = rodada;
+          }
+        } 
+      }
+    }
+    if(jogador_atual==1){
+      jogador_atual = 2;
+    }
+    else{
+      jogador_atual = 1;
+    }
   }
   }
 }
