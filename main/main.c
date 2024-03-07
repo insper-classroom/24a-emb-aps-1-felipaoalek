@@ -75,6 +75,7 @@ volatile int escolhido[100];
 volatile int selecionados[100];
 volatile int recorde =0;
 
+
 void reproduz(double tempo, int freq, int pino, int led_pino){
   float periodo = (1.0/freq) * (float) pow(10,6);
   float s = (periodo / (float)2) ;
@@ -94,6 +95,26 @@ void reproduz(double tempo, int freq, int pino, int led_pino){
 
 }
 
+void musica_inicio() {
+    reproduz(300, 494, BUZZ_PIN, LED_PIN_GREEN); // B
+    reproduz(300, 587, BUZZ_PIN, LED_PIN_RED);   // D
+    reproduz(300, 659, BUZZ_PIN, LED_PIN_BLUE);  // E
+    reproduz(300, 587, BUZZ_PIN, LED_PIN_YELLOW); // D
+    reproduz(300, 659, BUZZ_PIN, LED_PIN_GREEN); // E
+    reproduz(300, 784, BUZZ_PIN, LED_PIN_RED);   // G
+    reproduz(300, 880, BUZZ_PIN, LED_PIN_BLUE);  // A
+    sleep_ms(500);
+}
+
+void musica_final() {
+    reproduz(500, 392, BUZZ_PIN, LED_PIN_GREEN); // G
+    reproduz(500, 330, BUZZ_PIN, LED_PIN_RED);   // E
+    reproduz(500, 294, BUZZ_PIN, LED_PIN_BLUE);  // D
+    reproduz(500, 262, BUZZ_PIN, LED_PIN_YELLOW); // C
+    sleep_ms(500);
+}
+
+
 int calcula_tamanho(volatile int v[]){
   int i = 0;
   while(v[i] != 5){
@@ -107,11 +128,16 @@ void erro(double tempo, int freq, int pino){
   float s = (periodo / (float)2) ;
   int giro = (tempo*1000)/(periodo);
   int i = 0;
+  musica_final();
   while(i<=giro){
+
+
     gpio_put(pino, 1);
     sleep_us((int)s);
     gpio_put(pino, 0);
     sleep_us((int)s);
+
+
 
     gpio_put(LED_PIN_RED ,1);
     gpio_put(LED_PIN_GREEN ,1);
@@ -119,6 +145,7 @@ void erro(double tempo, int freq, int pino){
     gpio_put(LED_PIN_YELLOW ,1);
 
     i++;
+
   }
     sleep_ms(100);
     gpio_put(LED_PIN_RED ,0);
@@ -190,6 +217,7 @@ int main(){
         escolhido[i] = 5;
         selecionados[i] = 5;
     }
+    
   gpio_init(BTN_PIN_RED);
   gpio_set_dir(BTN_PIN_RED, GPIO_IN);
   gpio_pull_up(BTN_PIN_RED);
@@ -297,9 +325,23 @@ int main(){
 
   // callback led g (nao usar _with_callback)
 
+  while (Ligado==1) {
+
+    //Fazendo reestart do jogo
+    if (jogo == 0){
+      for (int i = 0; i < 100; i++) {
+        escolhido[i] = 5;
+        selecionados[i] = 5;
+      }
+      rodada = 0;
+      recorde = 0;
+    }
+
+
   while(jogo == 0){
     printf("Aperte o botão para começar\n");
   }
+  musica_inicio();
   sleep_ms(100);
   printf("Jogo iniciado\n");
 
@@ -417,6 +459,7 @@ int main(){
 
   while(jogo == 1 && two == 1){
     // CÓDIGO 2 PLAYERS
+  }
   }
 }
 
