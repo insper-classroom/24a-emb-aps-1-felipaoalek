@@ -11,7 +11,7 @@
 
 const int BTN_PIN_RED = 12;
 const int BTN_PIN_GREEN = 13;
-const int BTN_PIN_BLUE = 10;
+const int BTN_PIN_BLUE = 9;
 const int BTN_PIN_YELLOW = 11;
 
 const int BTN_PIN_RED_2 = 24;
@@ -27,7 +27,7 @@ const int BTN_PIN_TWO_PLAYERS = 16;
 const int LED_PIN_RED = 6;
 const int LED_PIN_GREEN = 8;
 const int LED_PIN_BLUE = 7;
-const int LED_PIN_YELLOW = 9;
+const int LED_PIN_YELLOW = 5;
 
 const int LED_PIN_RED_2 = 20;
 const int LED_PIN_GREEN_2 = 21;
@@ -190,7 +190,6 @@ int main(){
         escolhido[i] = 5;
         selecionados[i] = 5;
     }
-
   gpio_init(BTN_PIN_RED);
   gpio_set_dir(BTN_PIN_RED, GPIO_IN);
   gpio_pull_up(BTN_PIN_RED);
@@ -207,6 +206,33 @@ int main(){
   gpio_set_dir(BTN_PIN_YELLOW, GPIO_IN);
   gpio_pull_up(BTN_PIN_YELLOW);
 
+  gpio_init(BTN_PIN_RED_2);
+  gpio_set_dir(BTN_PIN_RED_2, GPIO_IN);
+  gpio_pull_up(BTN_PIN_RED_2);
+
+  gpio_init(BTN_PIN_GREEN_2);
+  gpio_set_dir(BTN_PIN_GREEN_2, GPIO_IN);
+  gpio_pull_up(BTN_PIN_GREEN_2);
+
+  gpio_init(BTN_PIN_BLUE_2);
+  gpio_set_dir(BTN_PIN_BLUE_2, GPIO_IN);
+  gpio_pull_up(BTN_PIN_BLUE_2);
+
+  gpio_init(BTN_PIN_YELLOW_2);
+  gpio_set_dir(BTN_PIN_YELLOW_2, GPIO_IN);
+  gpio_pull_up(BTN_PIN_YELLOW_2);
+
+  gpio_init(BTN_PIN_START);
+  gpio_set_dir(BTN_PIN_START, GPIO_IN);
+  gpio_pull_up(BTN_PIN_START);
+
+  gpio_init(BTN_PIN_ONE_PLAYER);
+  gpio_set_dir(BTN_PIN_ONE_PLAYER, GPIO_IN);
+  gpio_pull_up(BTN_PIN_ONE_PLAYER);
+
+  gpio_init(BTN_PIN_TWO_PLAYERS);
+  gpio_set_dir(BTN_PIN_TWO_PLAYERS, GPIO_IN);
+  gpio_pull_up(BTN_PIN_TWO_PLAYERS);
 
   gpio_init(LED_PIN_RED);
   gpio_set_dir(LED_PIN_RED, GPIO_OUT);
@@ -219,6 +245,18 @@ int main(){
 
   gpio_init(LED_PIN_YELLOW);
   gpio_set_dir(LED_PIN_YELLOW, GPIO_OUT);
+
+  gpio_init(LED_PIN_RED_2);
+  gpio_set_dir(LED_PIN_RED_2, GPIO_OUT);
+
+  gpio_init(LED_PIN_GREEN_2);
+  gpio_set_dir(LED_PIN_GREEN_2, GPIO_OUT);
+
+  gpio_init(LED_PIN_BLUE_2);
+  gpio_set_dir(LED_PIN_BLUE_2, GPIO_OUT);
+
+  gpio_init(LED_PIN_YELLOW_2);
+  gpio_set_dir(LED_PIN_YELLOW_2, GPIO_OUT);
 
   gpio_init(BUZZ_PIN);
   gpio_set_dir(BUZZ_PIN, GPIO_OUT);
@@ -236,6 +274,27 @@ int main(){
   gpio_set_irq_enabled_with_callback(BTN_PIN_YELLOW, GPIO_IRQ_EDGE_RISE, true,
                                       &btn_callback);
 
+  gpio_set_irq_enabled_with_callback(BTN_PIN_RED_2, GPIO_IRQ_EDGE_RISE, true,
+                                      &btn_callback); 
+
+  gpio_set_irq_enabled_with_callback(BTN_PIN_GREEN_2, GPIO_IRQ_EDGE_RISE, true,
+                                      &btn_callback); 
+
+  gpio_set_irq_enabled_with_callback(BTN_PIN_BLUE_2, GPIO_IRQ_EDGE_RISE, true,
+                                      &btn_callback); 
+
+  gpio_set_irq_enabled_with_callback(BTN_PIN_YELLOW_2, GPIO_IRQ_EDGE_RISE, true,
+                                      &btn_callback);
+
+  gpio_set_irq_enabled_with_callback(BTN_PIN_START, GPIO_IRQ_EDGE_RISE, true,
+                                      &btn_callback);
+
+  gpio_set_irq_enabled_with_callback(BTN_PIN_ONE_PLAYER, GPIO_IRQ_EDGE_RISE, true,
+                                      &btn_callback);
+
+  gpio_set_irq_enabled_with_callback(BTN_PIN_TWO_PLAYERS, GPIO_IRQ_EDGE_RISE, true,
+                                      &btn_callback);
+
   // callback led g (nao usar _with_callback)
 
   while(jogo == 0){
@@ -248,12 +307,20 @@ int main(){
     printf("Escolha o modo de jogo\n");
   }
 
-  if(one == 0){
-    printf("Modo de jogo: 1 jogador\n");
-  } else if(two == 0){
-    printf("Modo de jogo: 2 jogadores\n");
+  while(jogo == 1){
+    printf("Escolha o modo de jogo\n");
+    if(one == 1){
+      printf("Modo de jogo: 1 jogador\n");
+      break;
+    } else if(two == 1){
+      printf("Modo de jogo: 2 jogadores\n");
+      break;
+    }
+    sleep_ms(500);
   }
-  sleep_ms(500);
+
+  printf("Jogo iniciado\n");
+  sleep_ms(1000);
 
   while (jogo ==1 && one == 1) {
     for (int i = 0; i < 100; i++) {
