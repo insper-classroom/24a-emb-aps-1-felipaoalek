@@ -82,6 +82,7 @@ volatile int escolhido[100];
 volatile int selecionados[100];
 volatile int recorde =0;
 volatile int x=0;
+volatile int v = 0
 
 
 void reproduz(double tempo, int freq, int pino, int led_pino){
