@@ -3,7 +3,7 @@
 ## C - Feito
 ## C+ - Caixa - Feito
 ## B - Musica - Feito
-## B+ - C e H - Feito
+## B+ - Mostra Recorde - Feito
 ## A - 2 Players - Feito
 ## A+ - Mostra pontuação - Feito
 
