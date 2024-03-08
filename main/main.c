@@ -42,7 +42,7 @@ const int BUZZ_PIN = 18;
 
 volatile int Ligado = 1;
 
-volatile int jogador_atual = 1;
+int jogador_atual = 1;
 
 volatile int foi_red = 0;
 volatile int foi_green = 0;
@@ -69,20 +69,19 @@ volatile int freq_red = 6000;
 volatile int freq_blue = 4000;
 volatile int freq_yellow = 2000;
 
-volatile int ledSelecionado = 0;
-volatile int jogo = 0;
-volatile int escolheu = 1;
-volatile int rodada = 0;
-volatile int one = 0;
-volatile int two = 0;
-volatile int l = 0;
+int ledSelecionado = 0;
+int jogo = 0;
+int escolheu = 1;
+int rodada = 0;
+int one = 0;
+int two = 0;
+int l = 0;
 
 volatile int possiveis[4] = {0, 1, 2, 3};
-volatile int escolhido[100];
-volatile int selecionados[100];
-volatile int recorde =0;
-volatile int x=0;
-volatile int v = 0
+int escolhido[100];
+int selecionados[100];
+int recorde =0;
+int x=0;
 
 
 void reproduz(double tempo, int freq, int pino, int led_pino){
@@ -196,7 +195,7 @@ void escolheLEDaleatorio(int i) {
 
 void reproduzLedsAleatorios(){
     for (int i = 0; i < 100; i++) {
-        if (escolhido[i] == 0){
+        if ([i] == 0){
             reproduz(700, freq_green, BUZZ_PIN, LED_PIN_GREEN);
         } else if (escolhido[i] == 1){
             reproduz(700, freq_red, BUZZ_PIN, LED_PIN_RED);
