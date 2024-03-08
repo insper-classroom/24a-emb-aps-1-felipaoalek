@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+//https://github.com/raspberrypi/pico-examples/blob/master/i2c/lcd_1602_i2c/lcd_1602_i2c.c
+
 #include "hardware/gpio.h"
 #include "pico/stdlib.h"
 #include <stdio.h>
@@ -11,18 +13,18 @@
 
 const int BTN_PIN_RED = 12;
 const int BTN_PIN_GREEN = 13;
-const int BTN_PIN_BLUE = 9;
+const int BTN_PIN_BLUE = 9;     
 const int BTN_PIN_YELLOW = 11;
 
-const int BTN_PIN_RED_2 = 24;
-const int BTN_PIN_GREEN_2 = 25;
+const int BTN_PIN_RED_2 = 28;
+const int BTN_PIN_GREEN_2 = 17;
 const int BTN_PIN_BLUE_2 = 26;
 const int BTN_PIN_YELLOW_2 = 27;
 
 const int BTN_PIN_START = 14;
 
 const int BTN_PIN_ONE_PLAYER = 15;
-const int BTN_PIN_TWO_PLAYERS = 17;
+const int BTN_PIN_TWO_PLAYERS = 16;
 
 const int LED_PIN_RED = 6;
 const int LED_PIN_GREEN = 8;
@@ -32,7 +34,9 @@ const int LED_PIN_YELLOW = 5;
 const int LED_PIN_RED_2 = 20;
 const int LED_PIN_GREEN_2 = 21;
 const int LED_PIN_BLUE_2 = 22;
-const int LED_PIN_YELLOW_2 = 23;
+const int LED_PIN_YELLOW_2 = 19;
+
+const int LED_PIN_RECORD = 2;
 
 const int BUZZ_PIN = 18;
 
@@ -99,12 +103,13 @@ void reproduz(double tempo, int freq, int pino, int led_pino){
 }
 
 void musica_inicio() {
-    reproduz(300, 494, BUZZ_PIN, LED_PIN_GREEN); // B
-    reproduz(300, 587, BUZZ_PIN, LED_PIN_RED);   // D
-    reproduz(300, 659, BUZZ_PIN, LED_PIN_BLUE);  // E
-    reproduz(300, 587, BUZZ_PIN, LED_PIN_YELLOW); // D
-    reproduz(300, 659, BUZZ_PIN, LED_PIN_GREEN); // E
-    reproduz(300, 784, BUZZ_PIN, LED_PIN_RED);   // G
+    reproduz(300, 494, BUZZ_PIN, LED_PIN_YELLOW); // B
+    reproduz(300, 587, BUZZ_PIN, LED_PIN_GREEN);   // D
+    reproduz(300, 659, BUZZ_PIN, LED_PIN_RED_2);  // E
+    reproduz(300, 587, BUZZ_PIN, LED_PIN_BLUE_2); // D
+    reproduz(300, 659, BUZZ_PIN, LED_PIN_YELLOW_2); // E
+    reproduz(300, 784, BUZZ_PIN, LED_PIN_GREEN_2);   // G
+    reproduz(300, 880, BUZZ_PIN, LED_PIN_RED);  // A
     reproduz(300, 880, BUZZ_PIN, LED_PIN_BLUE);  // A
     sleep_ms(500);
 }
@@ -146,6 +151,10 @@ void erro(double tempo, int freq, int pino){
     gpio_put(LED_PIN_GREEN ,1);
     gpio_put(LED_PIN_BLUE, 1);
     gpio_put(LED_PIN_YELLOW ,1);
+    gpio_put(LED_PIN_RED_2 ,1);
+    gpio_put(LED_PIN_GREEN_2 ,1);
+    gpio_put(LED_PIN_BLUE_2, 1);
+    gpio_put(LED_PIN_YELLOW_2 ,1);
 
     i++;
 
@@ -155,9 +164,19 @@ void erro(double tempo, int freq, int pino){
     gpio_put(LED_PIN_GREEN ,0);
     gpio_put(LED_PIN_BLUE ,0);
     gpio_put(LED_PIN_YELLOW ,0);
+    gpio_put(LED_PIN_RED_2 ,0);
+    gpio_put(LED_PIN_GREEN_2 ,0);
+    gpio_put(LED_PIN_BLUE_2 ,0);
+    gpio_put(LED_PIN_YELLOW_2 ,0);
     jogo = 0;
 }
 
+void piscando_recorde(int recorde){
+  for (int i = 0; i < recorde; i++) {
+    reproduz(200, freq_green, BUZZ_PIN, LED_PIN_RECORD);
+    sleep_ms(1000);
+  }
+}
 
 void escolheLEDaleatorio(int i) {
     srand(time(NULL));
@@ -312,6 +331,9 @@ int main(){
   gpio_init(LED_PIN_YELLOW_2);
   gpio_set_dir(LED_PIN_YELLOW_2, GPIO_OUT);
 
+  gpio_init(LED_PIN_RECORD);
+  gpio_set_dir(LED_PIN_RECORD, GPIO_OUT);
+
   gpio_init(BUZZ_PIN);
   gpio_set_dir(BUZZ_PIN, GPIO_OUT);
 
@@ -353,6 +375,13 @@ int main(){
 
   while (Ligado==1) {
 
+    //Mostrando recorde
+    printf("Recorde: %d\n", recorde);
+
+    if(recorde > 0){
+      piscando_recorde(recorde);
+    }
+
     //Fazendo reestart do jogo
     if (jogo == 0){
       for (int i = 0; i < 100; i++) {
@@ -361,6 +390,8 @@ int main(){
       }
       rodada = 0;
       recorde = 0;
+      one=0;
+      two=0;
     }
 
   printf(("APERTE START PARA INICIAR O JOGO\n"));
@@ -378,9 +409,11 @@ int main(){
 
   while(jogo == 1){
     if(one == 1){
+      reproduz(300, freq_green, BUZZ_PIN, LED_PIN_RECORD);
       printf("Modo de jogo: 1 jogador\n");
       break;
     } else if(two == 1){
+      reproduz(300, freq_green, BUZZ_PIN, LED_PIN_GREEN);
       printf("Modo de jogo: 2 jogadores\n");
       break;
     }
@@ -396,6 +429,8 @@ int main(){
           selecionados[i] = 5;
         }
     }
+
+    recorde+=rodada;
 
     if (escolheu == 1){
     escolheLEDaleatorio(rodada);
@@ -495,6 +530,8 @@ int main(){
           selecionados[i] = 5;
         }
     }
+
+    recorde+=rodada;
 
     if (escolheu == 1){
     escolheLEDaleatorio(rodada);
