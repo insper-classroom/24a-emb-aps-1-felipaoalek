@@ -125,7 +125,7 @@ void musica_final() {
 }
 
 
-int calcula_tamanho(volatile int v[]){
+int calcula_tamanho(const volatile int v[]){
   int i = 0;
   while(v[i] != 5){
     i++;
