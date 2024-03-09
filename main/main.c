@@ -215,7 +215,7 @@ void print_lista(volatile int v[]){
 
 void btn_callback(uint gpio, uint32_t events) {
    
-  if (events == 0 8){
+  if (events == 0x8){
     if (gpio == BTN_PIN_GREEN) {
       foi_green = 1;
     } else if(gpio == BTN_PIN_RED){
