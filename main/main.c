@@ -10,7 +10,7 @@
 #include "pico/stdlib.h"
 #include <stdio.h>
 #include <math.h>
-#include "/workspaces/24a-emb-aps-1-felipaoalek/game_variables.h"
+#include "../game_variables.h"
 
 
 const int BTN_PIN_RED = 12;
