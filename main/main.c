@@ -69,10 +69,6 @@ volatile int freq_red = 6000;
 volatile int freq_blue = 4000;
 volatile int freq_yellow = 2000;
 
-volatile int recorde = 0;
-volatile int x = 0;
-
-
 volatile int jogo = 0;
 volatile int one = 0;
 volatile int two = 0;
@@ -381,6 +377,9 @@ int main(){
   // callback led g (nao usar _with_callback)
 
   while (Ligado==1) {
+
+    int recorde = 0
+    int x = 0
 
     //Mostrando recorde
     printf("Recorde: %d\n", recorde);
