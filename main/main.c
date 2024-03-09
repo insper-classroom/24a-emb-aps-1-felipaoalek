@@ -76,8 +76,6 @@ volatile int two = 0;
 int l = 0;
 
 volatile int possiveis[4] = {0, 1, 2, 3};
-volatile int recorde = 0;
-volatile int x = 0;
 
 void reproduz(double tempo, int freq, int pino, int led_pino){
   float periodo = (1.0/freq) * (float) pow(10,6);
