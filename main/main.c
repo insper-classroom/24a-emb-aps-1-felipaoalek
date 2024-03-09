@@ -10,6 +10,8 @@
 #include "pico/stdlib.h"
 #include <stdio.h>
 #include <math.h>
+#include "game_variables.h"
+
 
 const int BTN_PIN_RED = 12;
 const int BTN_PIN_GREEN = 13;
@@ -74,9 +76,8 @@ volatile int two = 0;
 int l = 0;
 
 volatile int possiveis[4] = {0, 1, 2, 3};
-volatile int recorde =0;
-volatile int x=0;
-
+volatile int recorde = 0;
+volatile int x = 0;
 
 void reproduz(double tempo, int freq, int pino, int led_pino){
   float periodo = (1.0/freq) * (float) pow(10,6);
@@ -184,7 +185,6 @@ void escolheLEDaleatorio(int i,int escolhido[]) {
     srand(time(NULL));
     int ledAleatorio = srand() % 4; // Gera um número entre 0 e 3
     escolhido[i] = ledAleatorio;
-    int ledSelecionado = ledAleatorio;
 }
 
 void reproduzLedsAleatorios(const int escolhido[]){
