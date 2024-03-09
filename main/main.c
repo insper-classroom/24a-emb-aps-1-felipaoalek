@@ -70,11 +70,11 @@ volatile int freq_blue = 4000;
 volatile int freq_yellow = 2000;
 
 int ledSelecionado = 0;
-int jogo = 0;
+volatile int jogo = 0;
 int escolheu = 1;
 int rodada = 0;
-int one = 0;
-int two = 0;
+volatile int one = 0;
+volatile int two = 0;
 int l = 0;
 
 volatile int possiveis[4] = {0, 1, 2, 3};
