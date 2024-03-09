@@ -42,8 +42,6 @@ const int BUZZ_PIN = 18;
 
 volatile int Ligado = 1;
 
-int jogador_atual = 1;
-
 volatile int foi_red = 0;
 volatile int foi_green = 0;
 volatile int foi_blue = 0;
@@ -69,19 +67,15 @@ volatile int freq_red = 6000;
 volatile int freq_blue = 4000;
 volatile int freq_yellow = 2000;
 
-int ledSelecionado = 0;
+
 volatile int jogo = 0;
-int escolheu = 1;
-int rodada = 0;
 volatile int one = 0;
 volatile int two = 0;
 int l = 0;
 
 volatile int possiveis[4] = {0, 1, 2, 3};
-int escolhido[100];
-int selecionados[100];
-int recorde =0;
-int x=0;
+volatile int recorde =0;
+volatile int x=0;
 
 
 void reproduz(double tempo, int freq, int pino, int led_pino){
@@ -186,14 +180,15 @@ void piscando_recorde(int recorde){
   }
 }
 
-void escolheLEDaleatorio(int i) {
+void escolheLEDaleatorio(int i,int escolhido[]) {
     srand(time(NULL));
+    int ledSelecionado = 0;
     int ledAleatorio = srand() % 4; // Gera um número entre 0 e 3
     escolhido[i] = ledAleatorio;
     ledSelecionado = ledAleatorio;
 }
 
-void reproduzLedsAleatorios(){
+void reproduzLedsAleatorios(int escolhido[]){
     for (int i = 0; i < 100; i++) {
         if (escolhido[i] == 0){
             reproduz(700, freq_green, BUZZ_PIN, LED_PIN_GREEN);
@@ -207,7 +202,7 @@ void reproduzLedsAleatorios(){
     }
 }
 
-void reproduzLedsAleatorios2(){
+void reproduzLedsAleatorios2(int escolhido[]){
     for (int i = 0; i < 100; i++) {
         if (escolhido[i] == 0){
             reproduz(700, freq_green, BUZZ_PIN, LED_PIN_GREEN_2);
@@ -265,6 +260,10 @@ void btn_callback(uint gpio, uint32_t events) {
 
 int main(){
   stdio_init_all();
+  int escolhido[100];
+  int selecionados[100];
+  int escolheu = 1;
+  int rodada = 0;
 
   for (int i = 0; i < 100; i++) {
         escolhido[i] = 5;
@@ -396,7 +395,6 @@ int main(){
         escolhido[i] = 5;
         selecionados[i] = 5;
       }
-      rodada = 0;
       one=0;
       two=0;
       x=0;
@@ -439,8 +437,8 @@ int main(){
     }
 
     if (escolheu == 1){
-    escolheLEDaleatorio(rodada);
-    reproduzLedsAleatorios();
+    escolheLEDaleatorio(rodada, escolhido);
+    reproduzLedsAleatorios(escolhido);
     escolheu = 0;
     }
     rodada = 0;
@@ -540,6 +538,8 @@ int main(){
     printf("X: %d\n", x);
   }
 
+  int jogador_atual = 1;
+
   while(jogo == 1 && two == 1){
 
     if(jogador_atual == 1){
@@ -551,8 +551,8 @@ int main(){
     }
 
     if (escolheu == 1){
-    escolheLEDaleatorio(rodada);
-    reproduzLedsAleatorios();
+    escolheLEDaleatorio(rodada, escolhido);
+    reproduzLedsAleatorios(escolhido);
     escolheu = 0;
     }
     rodada = 0;
@@ -644,8 +644,8 @@ int main(){
       }
 
       if (escolheu == 1){
-      escolheLEDaleatorio(rodada);
-      reproduzLedsAleatorios2();
+      escolheLEDaleatorio(rodada, escolhido);
+      reproduzLedsAleatorios2(escolhido);
       escolheu = 0;
       }
       rodada = 0;
