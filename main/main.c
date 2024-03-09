@@ -378,8 +378,8 @@ int main(){
 
   while (Ligado==1) {
 
-    int recorde = 0
-    int x = 0
+    int recorde = 0;
+    int x = 0;
 
     //Mostrando recorde
     printf("Recorde: %d\n", recorde);
