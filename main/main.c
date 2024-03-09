@@ -182,13 +182,12 @@ void piscando_recorde(int recorde){
 
 void escolheLEDaleatorio(int i,int escolhido[]) {
     srand(time(NULL));
-    int ledSelecionado = 0;
     int ledAleatorio = srand() % 4; // Gera um número entre 0 e 3
     escolhido[i] = ledAleatorio;
-    ledSelecionado = ledAleatorio;
+    int ledSelecionado = ledAleatorio;
 }
 
-void reproduzLedsAleatorios(int escolhido[]){
+void reproduzLedsAleatorios(const int escolhido[]){
     for (int i = 0; i < 100; i++) {
         if (escolhido[i] == 0){
             reproduz(700, freq_green, BUZZ_PIN, LED_PIN_GREEN);
@@ -202,7 +201,7 @@ void reproduzLedsAleatorios(int escolhido[]){
     }
 }
 
-void reproduzLedsAleatorios2(int escolhido[]){
+void reproduzLedsAleatorios2(const int escolhido[]){
     for (int i = 0; i < 100; i++) {
         if (escolhido[i] == 0){
             reproduz(700, freq_green, BUZZ_PIN, LED_PIN_GREEN_2);
