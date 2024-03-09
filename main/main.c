@@ -215,7 +215,7 @@ void print_lista(volatile int v[]){
 
 void btn_callback(uint gpio, uint32_t events) {
    
-  if (events == 0x8){
+  if (events == 0 8){
     if (gpio == BTN_PIN_GREEN) {
       foi_green = 1;
     } else if(gpio == BTN_PIN_RED){
@@ -380,7 +380,6 @@ int main(){
       }
       one=0;
       two=0;
-      x=0;
     }
 
   printf(("APERTE START PARA INICIAR O JOGO\n"));
@@ -503,8 +502,6 @@ int main(){
 
       } 
     }
-    x++;
-    printf("X: %d\n", x);
   }
 
   int jogador_atual = 1;
@@ -695,8 +692,6 @@ int main(){
           rodada++;
         } 
       }
-      x++;
-      printf("X: %d\n", x);
     }
     if(jogador_atual==1){
       jogador_atual = 2;
