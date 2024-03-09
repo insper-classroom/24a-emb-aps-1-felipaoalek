@@ -1,16 +1,10 @@
-/**
- * Copyright (c) 2020 Raspberry Pi (Trading) Ltd.
- *
- * SPDX-License-Identifier: BSD-3-Clause
- */
-
 //https://github.com/raspberrypi/pico-examples/blob/master/i2c/lcd_1602_i2c/lcd_1602_i2c.c
 
 #include "hardware/gpio.h"
 #include "pico/stdlib.h"
 #include <stdio.h>
 #include <math.h>
-#include "../game_variables.h"
+#include "game_variables.h"
 
 
 const int BTN_PIN_RED = 12;
@@ -124,11 +118,17 @@ int calcula_tamanho(const volatile int v[]){
   return i;
 }
 
-void erro(double tempo, int freq, int pino){
+void erro(double tempo, int freq, int pino, int x, int recorde){
   float periodo = (1.0/freq) * (float) pow(10,6);
   float s = (periodo / (float)2) ;
   int giro = (tempo*1000)/(periodo);
   int i = 0;
+  //Errou, Recorde
+  printf("X: %d\n", x);
+  if (x > recorde){
+  recorde = x;
+  }
+  printf("Errou, Recorde: %d\n", recorde);
   musica_final();
 
   while(i<=giro){
@@ -162,11 +162,11 @@ void erro(double tempo, int freq, int pino){
     gpio_put(LED_PIN_BLUE_2 ,0);
     gpio_put(LED_PIN_YELLOW_2 ,0);
     jogo = 0;
-    piscando_recorde();
+    piscando_recorde(recorde);
 }
 
-void piscando_recorde(){
-  for (int i = 0; i < 10; i++) {
+void piscando_recorde(int recorde){
+  for (int i = 0; i < recorde; i++) {
     reproduz(200, freq_green, BUZZ_PIN, LED_PIN_RECORD);
     sleep_ms(500);
   }
@@ -372,6 +372,13 @@ int main(){
 
   while (Ligado==1) {
 
+    //Mostrando recorde
+    printf("Recorde: %d\n", recorde);
+
+    if(recorde > 0){
+      piscando_recorde(recorde);
+    }
+
     //Fazendo reestart do jogo
     if (jogo == 0){
       for (int i = 0; i < 100; i++) {
@@ -441,6 +448,10 @@ int main(){
         sleep_ms(500);
         foi_green = 0;
         if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
+            erro(600, 180, BUZZ_PIN, x, recorde);
+            if (rodada > recorde){
+              recorde = rodada;
+            }
             jogo = 0;
             break;
         }
@@ -459,6 +470,10 @@ int main(){
         sleep_ms(500);
         foi_red = 0;
         if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
+            erro(600, 180, BUZZ_PIN, x, recorde);
+            if (rodada > recorde){
+              recorde = rodada;
+            }
             jogo = 0;
             break;
         }
@@ -477,7 +492,10 @@ int main(){
         sleep_ms(500);
         foi_blue = 0;
         if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
-
+            erro(600, 180, BUZZ_PIN, x, recorde);
+            if (rodada > recorde){
+              recorde = rodada;
+            }
             jogo = 0;
         }
         rodada++;
@@ -495,7 +513,10 @@ int main(){
         sleep_ms(500);
         foi_yellow = 0;
         if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
-
+            erro(600, 180, BUZZ_PIN, x, recorde);
+            if (rodada > recorde){
+              recorde = rodada;
+            }
             jogo = 0;
             break;
         }
@@ -540,6 +561,7 @@ int main(){
           sleep_ms(500);
           foi_green = 0;
           if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
+            erro(600, 180, BUZZ_PIN, x, recorde);
               jogo = 0;
               break;
           }
@@ -558,7 +580,7 @@ int main(){
           sleep_ms(500);
           foi_red = 0;
           if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
-
+            erro(600, 180, BUZZ_PIN, x, recorde);
               jogo = 0;
               break;
           }
@@ -577,7 +599,7 @@ int main(){
           sleep_ms(500);
           foi_blue = 0;
           if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
-
+            erro(600, 180, BUZZ_PIN, x, recorde);
               jogo = 0;
           }
           rodada++;
@@ -595,7 +617,7 @@ int main(){
           sleep_ms(500);
           foi_yellow = 0;
           if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
-
+            erro(600, 180, BUZZ_PIN, x, recorde);
               jogo = 0;
               break;
           }
@@ -632,7 +654,10 @@ int main(){
           sleep_ms(500);
           foi_green = 0;
           if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
-
+            erro(600, 180, BUZZ_PIN, x, recorde);
+            if (rodada > recorde){
+              recorde = rodada;
+            }
               jogo = 0;
               break;
           }
@@ -651,7 +676,10 @@ int main(){
           sleep_ms(500);
           foi_red = 0;
           if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
-
+            erro(600, 180, BUZZ_PIN, x, recorde);
+            if (rodada > recorde){
+              recorde = rodada;
+            }
               jogo = 0;
               break;
           }
@@ -670,7 +698,10 @@ int main(){
           sleep_ms(500);
           foi_blue = 0;
           if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
-
+            erro(600, 180, BUZZ_PIN, x, recorde);
+            if (rodada > recorde){
+              recorde = rodada;
+            }
               jogo = 0;
           }
           rodada++;
@@ -688,11 +719,18 @@ int main(){
           sleep_ms(500);
           foi_yellow = 0;
           if ((escolhido[rodada] != selecionados[rodada])&&(selecionados[rodada] != 5)){
-
+            erro(600, 180, BUZZ_PIN, x, recorde);
+            if (rodada > recorde){
+              recorde = rodada;
+            }
               jogo = 0;
               break;
           }
           rodada++;
+          if (rodada > recorde){
+            recorde = rodada;
+            printf("Recorde: %d\n", recorde);
+          }
         } 
       }
       x++;
