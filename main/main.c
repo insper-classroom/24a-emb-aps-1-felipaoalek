@@ -69,6 +69,9 @@ volatile int freq_red = 6000;
 volatile int freq_blue = 4000;
 volatile int freq_yellow = 2000;
 
+volatile int recorde = 0;
+volatile int x = 0;
+
 
 volatile int jogo = 0;
 volatile int one = 0;
