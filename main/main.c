@@ -195,7 +195,7 @@ void escolheLEDaleatorio(int i) {
 
 void reproduzLedsAleatorios(){
     for (int i = 0; i < 100; i++) {
-        if ([i] == 0){
+        if (escolhido[i] == 0){
             reproduz(700, freq_green, BUZZ_PIN, LED_PIN_GREEN);
         } else if (escolhido[i] == 1){
             reproduz(700, freq_red, BUZZ_PIN, LED_PIN_RED);
